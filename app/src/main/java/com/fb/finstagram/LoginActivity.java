@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = (Button) findViewById(R.id.loginButton);
 
     }
-
+    // TODO: research- final variables within a method- how do they work?
     public void onClickLogin(View view){
         final String username = usernameInput.getText().toString();
         final String password = passwordInput.getText().toString();
@@ -42,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     // do not want to run a network call in main thread because it locks up the UI and make it seem
     // as the phone is not responding.
 
+    // TODO: research: final variables within a method
     private void login(String username, String password){
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
