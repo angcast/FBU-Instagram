@@ -38,6 +38,11 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, "onCLick works", Toast.LENGTH_LONG).show();
     }
 
+    public void onClickSignUp(View view){
+        Intent i = new Intent(LoginActivity.this, SignUpUsername.class);
+        startActivity(i);
+    }
+
     // controls login functionality: do logInInBackground because logIn will run on main thread, and we
     // do not want to run a network call in main thread because it locks up the UI and make it seem
     // as the phone is not responding.

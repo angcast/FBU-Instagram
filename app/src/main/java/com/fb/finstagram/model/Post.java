@@ -3,6 +3,7 @@ package com.fb.finstagram.model;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 @ParseClassName("Post")
@@ -35,6 +36,22 @@ public class Post extends ParseObject {
 
     public void setUser(ParseUser user){
         put(KEY_USER,user);
+    }
+
+    public static class Query extends ParseQuery<Post> {
+        public Query(){
+            super(Post.class);
+        }
+
+        public Query getTop(){
+            setLimit(20);
+            // builder pattern- allows users to chain these methods
+            return this;
+        }
+        public Query withUser(){
+            include(KEY_USER);
+            return this;
+        }
     }
 
 

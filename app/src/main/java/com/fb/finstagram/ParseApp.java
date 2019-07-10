@@ -2,7 +2,9 @@ package com.fb.finstagram;
 
 import android.app.Application;
 
+import com.fb.finstagram.model.Post;
 import com.parse.Parse;
+import com.parse.ParseObject;
 
 public class ParseApp extends Application {
 
@@ -19,6 +21,10 @@ public class ParseApp extends Application {
         // this will set up parse serve therefore on log activity it won't crash and will make
         // network call
         Parse.initialize(configuration);
+
+        // when you set a parse class name and extend ParseObject, you must let Parse know that you are
+        // creating a custom parse model
+        ParseObject.registerSubclass(Post.class);
 
     }
 }
