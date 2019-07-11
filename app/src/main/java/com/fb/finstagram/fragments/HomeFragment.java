@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fb.finstagram.HomeAdapter;
 import com.fb.finstagram.R;
@@ -20,6 +21,7 @@ public class HomeFragment extends AppCompatActivity {
 
     ArrayList<Post> arraylist_posts;
     HomeAdapter adapter;
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +33,32 @@ public class HomeFragment extends AppCompatActivity {
         adapter = new HomeAdapter(arraylist_posts);
         rvPosts.setAdapter(adapter);
         rvPosts.setLayoutManager(new LinearLayoutManager(this));
+        setUpSwipeContainer();
 
         showPosts();
+
+    }
+
+    public void setUpSwipeContainer(){
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Make sure you call swipeContainer.setRefreshing(false) once the network request has completed successfully.
+                arraylist_posts.clear(); // TODO: test: if u don't clear this, will it repopulate images twice?
+                adapter.clear();
+                showPosts();
+                swipeContainer.setRefreshing(false);
+
+            }
+
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
     }
 

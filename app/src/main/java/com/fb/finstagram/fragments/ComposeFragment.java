@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.fb.finstagram.BitmapScaler;
 import com.fb.finstagram.R;
 import com.fb.finstagram.model.Post;
 import com.parse.ParseException;
@@ -26,7 +27,9 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class ComposeFragment extends AppCompatActivity {
@@ -147,11 +150,35 @@ public class ComposeFragment extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                ivPicture.setImageBitmap(rotateBitmapOrientation(photoFile.getAbsolutePath()));
+                resizingImage();
+                Toast.makeText(this, photoFile.getAbsolutePath(), Toast.LENGTH_LONG).show();/// doesn't show ??
+                ivPicture.setImageBitmap(rotateBitmapOrientation(photoFile.getAbsolutePath()+"_resized"));
             } else {
                 // Result was a failure: if you exit out of picture prematurely (TODO ASK: what's diff w/ photoFile == null )
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    public void resizingImage() {
+        Uri takenPhotoUri = Uri.fromFile(getPhotoFileUri(photoFileName));
+        // by this point we have the camera photo on disk
+        Bitmap rawTakenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
+        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, 21);
+        // Configure byte output stream
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        // Compress the image further
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+        // Create a new file for the resized bitmap (`getPhotoFileUri` defined above)
+        File resizedFile = getPhotoFileUri(photoFileName + "_resized");
+        try {
+            resizedFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(resizedFile);
+            // Write the bytes of the bitmap to file
+            fos.write(bytes.toByteArray());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
