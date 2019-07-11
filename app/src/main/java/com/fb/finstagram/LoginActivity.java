@@ -43,11 +43,9 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    // controls login functionality: do logInInBackground because logIn will run on main thread, and we
+    // NOTE: controls login functionality: do logInInBackground because logIn will run on main thread, and we
     // do not want to run a network call in main thread because it locks up the UI and make it seem
     // as the phone is not responding.
-
-    // TODO: research: final variables within a method
     private void login(String username, String password){
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override

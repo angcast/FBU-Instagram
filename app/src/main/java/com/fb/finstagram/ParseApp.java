@@ -18,12 +18,9 @@ public class ParseApp extends Application {
                 .server("http://fbustagram.herokuapp.com/parse")
                 .build();
 
-        // this will set up parse serve therefore on log activity it won't crash and will make
-        // network call
+        // this will set up parse server therefore on log activity it won't crash and will make network call
         Parse.initialize(configuration);
-
-        // when you set a parse class name and extend ParseObject, you must let Parse know that you are
-        // creating a custom parse model
+        // when you set a parse class name and extend ParseObject, you must let Parse know that you are creating a custom parse model
         ParseObject.registerSubclass(Post.class);
 
     }

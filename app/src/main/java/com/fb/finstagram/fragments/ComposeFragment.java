@@ -21,16 +21,13 @@ import androidx.core.content.FileProvider;
 
 import com.fb.finstagram.R;
 import com.fb.finstagram.model.Post;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class ComposeFragment extends AppCompatActivity {
 
@@ -53,10 +50,10 @@ public class ComposeFragment extends AppCompatActivity {
         btnPicture = (Button) findViewById(R.id.btnComposePicture);
         ivPicture = (ImageView) findViewById(R.id.ivPicture);
 
-        queryPosts();
+        //queryPosts();
 
     }
-    private void queryPosts(){
+/*    private void queryPosts(){
         // think of this as data being stored into a list
         ParseQuery<Post>postQuery = new ParseQuery<Post>(Post.class);
         postQuery.include("user");
@@ -72,7 +69,7 @@ public class ComposeFragment extends AppCompatActivity {
                 }
             }
         });
-    }
+    }*/
 
     public void onClickSubmit(View view){
         String description = etDescription.getText().toString();
@@ -118,15 +115,10 @@ public class ComposeFragment extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create a File reference to access to future access
         photoFile = getPhotoFileUri(photoFileName);
-
-        // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
+        // wrap File object into a content provider required for API >= 24
         Uri fileProvider = FileProvider.getUriForFile(ComposeFragment.this, "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
+        // If you call startActivityForResult() using an intent that no app can handle, your app will crash. So as long as the result is not null, it's safe to use the intent.
         if (intent.resolveActivity(getPackageManager()) != null) {
             // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
@@ -145,7 +137,6 @@ public class ComposeFragment extends AppCompatActivity {
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
             Log.d(APP_TAG, "failed to create directory");
         }
-
         // Return the file target for the photo based on filename
         File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
 
@@ -156,12 +147,9 @@ public class ComposeFragment extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                // by this point we have the camera photo on disk
-               // Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
                 ivPicture.setImageBitmap(rotateBitmapOrientation(photoFile.getAbsolutePath()));
-            } else { // Result was a failure: if you exit out of picture prematurely (TODO ASK: what's diff w/ photoFile == null )
+            } else {
+                // Result was a failure: if you exit out of picture prematurely (TODO ASK: what's diff w/ photoFile == null )
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
@@ -192,7 +180,6 @@ public class ComposeFragment extends AppCompatActivity {
         Matrix matrix = new Matrix();
         matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
         Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
-        // Return result
         return rotatedBitmap;
     }
 
