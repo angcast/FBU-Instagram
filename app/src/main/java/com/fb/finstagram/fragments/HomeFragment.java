@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         setUpSwipeContainer();
-        
+
         showPosts();
     }
 

@@ -29,6 +29,16 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = (EditText) findViewById(R.id.loginPassword);
         loginButton = (Button) findViewById(R.id.loginButton);
 
+        ParseUser user = ParseUser.getCurrentUser();
+        checkIfUserLoggedIn(user);
+
+    }
+
+    public void checkIfUserLoggedIn(ParseUser user){
+        if (user!=null){
+            Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(i);
+        }
     }
     // TODO: research- final variables within a method- how do they work?
     public void onClickLogin(View view){

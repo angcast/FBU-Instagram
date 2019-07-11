@@ -14,6 +14,9 @@ import com.bumptech.glide.Glide;
 import com.fb.finstagram.model.Post;
 import com.parse.ParseFile;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
@@ -38,6 +41,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Post post = mPosts.get(position);
+        holder.tvTimeStampPost.setText(formatDate(post.getCreatedAt()));
         holder.tvDescriptionPost.setText(post.getDescription());
         holder.tvUsernamePost.setText(post.getUser().getUsername());
         ParseFile image = post.getImage();
@@ -50,6 +54,15 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         //TODO //tvTimeStamp.setText(post.getCreatedAt().toString()); //WHY NOT GET TIME EITHER
 
     }
+
+    public String formatDate (Date date){
+        String pattern = "MM/dd/yyyy HH:mm:ss";
+        DateFormat df = new SimpleDateFormat(pattern);
+        Date today = date;
+        return df.format(today);
+
+    }
+
 
     // Clean all elements of the recycler
     public void clear() {
