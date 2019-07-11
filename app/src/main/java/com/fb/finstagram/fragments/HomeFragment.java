@@ -2,8 +2,13 @@ package com.fb.finstagram.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -17,30 +22,32 @@ import com.parse.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends AppCompatActivity {
+public class HomeFragment extends Fragment {
 
-    ArrayList<Post> arraylist_posts;
-    HomeAdapter adapter;
+    protected ArrayList<Post> arraylist_posts;
+    protected HomeAdapter adapter;
     private SwipeRefreshLayout swipeContainer;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_fragment);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_home_fragment, container, false);
+    }
 
-        RecyclerView rvPosts = (RecyclerView) findViewById(R.id.rvPosts);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        RecyclerView rvPosts = (RecyclerView) view.findViewById(R.id.rvPosts);
         arraylist_posts = new ArrayList<>();
         adapter = new HomeAdapter(arraylist_posts);
         rvPosts.setAdapter(adapter);
-        rvPosts.setLayoutManager(new LinearLayoutManager(this));
+        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         setUpSwipeContainer();
-
+        
         showPosts();
-
     }
 
     public void setUpSwipeContainer(){
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -62,9 +69,10 @@ public class HomeFragment extends AppCompatActivity {
 
     }
 
-    private void showPosts(){
+    protected void showPosts(){
         Post.Query posts = new Post.Query();
         posts.getTop().withUser();
+        posts.addDescendingOrder(Post.KEY_CREATED_AT);
         posts.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> objects, ParseException e) {

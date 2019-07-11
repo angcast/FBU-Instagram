@@ -1,5 +1,6 @@
 package com.fb.finstagram.fragments;
 
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,14 +11,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 
 import com.fb.finstagram.BitmapScaler;
 import com.fb.finstagram.R;
@@ -32,58 +37,55 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class ComposeFragment extends AppCompatActivity {
+import static android.app.Activity.RESULT_OK;
+
+public class ComposeFragment extends Fragment {
 
     EditText etDescription;
     Button btnSubmit;
     Button btnPicture;
     ImageView ivPicture;
+    Toolbar toolbar;;
     public final String APP_TAG = "ComposeFragment";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     public String photoFileName = "photo.jpg";
     private File photoFile;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_compose_fragment);
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+        return inflater.inflate(R.layout.activity_compose_fragment, parent, false);
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        etDescription = (EditText) view.findViewById(R.id.etComposeDescription);
+        btnSubmit = (Button) view.findViewById(R.id.btnComposeSubmit);
+        btnPicture = (Button) view.findViewById(R.id.btnComposePicture);
+        ivPicture = (ImageView) view.findViewById(R.id.ivPicture);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        onClickSubmit();
+        onClickPicture();
+       //TODO why doesn't this work' //setSupportActionBar(toolbar);
 
-        etDescription = (EditText) findViewById(R.id.etComposeDescription);
-        btnSubmit = (Button) findViewById(R.id.btnComposeSubmit);
-        btnPicture = (Button) findViewById(R.id.btnComposePicture);
-        ivPicture = (ImageView) findViewById(R.id.ivPicture);
-
-        //queryPosts();
 
     }
-/*    private void queryPosts(){
-        // think of this as data being stored into a list
-        ParseQuery<Post>postQuery = new ParseQuery<Post>(Post.class);
-        postQuery.include("user");
-        postQuery.findInBackground(new FindCallback<Post>() {
+
+    public void onClickSubmit(){
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void done(List<Post> objects, ParseException e) {
-                if (e==null){
-                    for (int i=0; i<objects.size();i++){
-                        Log.d("HomeActivity","Post["+i+"]= "+ objects.get(i).getDescription()+ " Username= "+objects.get(i).getUser().getUsername());
-                    }
+            public void onClick(View view) {
+                String description = etDescription.getText().toString();
+                ParseUser user = ParseUser.getCurrentUser();
+                // accidentally taps on submit or if clicks take picture and does not take picture
+                if (photoFile == null || ivPicture.getDrawable() == null ){
+                    Log.e(APP_TAG,"No photo to submit");
+                    Toast.makeText(getContext(), "No photo", Toast.LENGTH_LONG).show();
                 }else{
-                    e.printStackTrace();
+                    savePost(description, user, photoFile);
                 }
             }
         });
-    }*/
-
-    public void onClickSubmit(View view){
-        String description = etDescription.getText().toString();
-        ParseUser user = ParseUser.getCurrentUser();
-        // accidentally taps on submit or if clicks take picture and does not take picture
-        if (photoFile == null || ivPicture.getDrawable() == null ){
-            Log.e(APP_TAG,"No photo to submit");
-            Toast.makeText(ComposeFragment.this, "No photo", Toast.LENGTH_LONG).show();
-        }else{
-            savePost(description, user, photoFile);
-        }
 
     }
 
@@ -109,8 +111,13 @@ public class ComposeFragment extends AppCompatActivity {
         });
     }
 
-    public void onClickPicture(View view){
-        launchCamera();
+    public void onClickPicture() {
+        btnPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchCamera();
+            }
+        });
     }
 
     public void launchCamera(){
@@ -119,10 +126,10 @@ public class ComposeFragment extends AppCompatActivity {
         // Create a File reference to access to future access
         photoFile = getPhotoFileUri(photoFileName);
         // wrap File object into a content provider required for API >= 24
-        Uri fileProvider = FileProvider.getUriForFile(ComposeFragment.this, "com.codepath.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash. So as long as the result is not null, it's safe to use the intent.
-        if (intent.resolveActivity(getPackageManager()) != null) {
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
             // Start the image capture intent to take photo
             startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
@@ -134,7 +141,7 @@ public class ComposeFragment extends AppCompatActivity {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
-        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
@@ -151,11 +158,11 @@ public class ComposeFragment extends AppCompatActivity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 resizingImage();
-                Toast.makeText(this, photoFile.getAbsolutePath(), Toast.LENGTH_LONG).show();/// doesn't show ??
+                Toast.makeText(getContext(), photoFile.getAbsolutePath(), Toast.LENGTH_LONG).show();/// doesn't show ??
                 ivPicture.setImageBitmap(rotateBitmapOrientation(photoFile.getAbsolutePath()+"_resized"));
             } else {
                 // Result was a failure: if you exit out of picture prematurely (TODO ASK: what's diff w/ photoFile == null )
-                Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -209,5 +216,4 @@ public class ComposeFragment extends AppCompatActivity {
         Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
         return rotatedBitmap;
     }
-
 }

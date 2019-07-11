@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ComposeFragment">
 
+    <include layout="@layout/activity_toolbar"/>
+
     <EditText
         android:id="@+id/etComposeDescription"
         android:layout_width="327dp"
@@ -27,7 +29,6 @@
         android:layout_marginRight="52dp"
         android:layout_marginBottom="88dp"
         android:text="Submit"
-        android:onClick="onClickSubmit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -39,7 +40,6 @@
         android:layout_marginLeft="48dp"
         android:layout_marginTop="8dp"
         android:text="Take a Picture"
-        android:onClick="onClickPicture"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etComposeDescription" />
 
