@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,12 +29,10 @@ public class SignUpEmail extends AppCompatActivity {
         newPassword = getIntent().getStringExtra("newPassword");
         etEmail = (EditText) findViewById(R.id.email);
 
-        Toast.makeText(this, newPassword, Toast.LENGTH_LONG).show();
 
     }
 
-    public void onClickNext(View view){
-        Toast.makeText(this, "onclick",Toast.LENGTH_LONG).show();
+    public void onClickNext(View view){ ;
         userSignUp();
     }
 
@@ -49,13 +46,11 @@ public class SignUpEmail extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if (e==null){
-                    Toast.makeText(SignUpEmail.this, "Successss", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(SignUpEmail.this, HomeActivity.class);
                     startActivity(i);
                 }
                 else{
                     e.printStackTrace();
-                    Toast.makeText(SignUpEmail.this, ":(", Toast.LENGTH_SHORT).show();
                 }
             }
         });

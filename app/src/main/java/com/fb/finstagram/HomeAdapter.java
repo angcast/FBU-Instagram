@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -81,6 +82,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         public ImageView ivImagePost;
         public TextView tvTimeStampPost;
         public TextView tvUsernamePost;
+        public ImageView ivProfilePicture;
+        public ImageButton heart;
 
         public ViewHolder(View itemView){
             super(itemView);
@@ -88,7 +91,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
             ivImagePost = (ImageView) itemView.findViewById(R.id.ivImagePost);
             tvTimeStampPost = (TextView) itemView.findViewById(R.id.tvTimeStampPost);
             tvUsernamePost = (TextView) itemView.findViewById(R.id.tvUsernamePost);
+            ivProfilePicture = (ImageView) itemView.findViewById(R.id.profilePicture);
+            heart = (ImageButton) itemView.findViewById(R.id.heart);
+
             clickAPost();
+            onClickProfilePicture();
         }
 
 
@@ -100,7 +107,29 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                     Intent i = new Intent (context, PostDetails.class);
                     i.putExtra("description",mPosts.get(position).getDescription());
                     i.putExtra("image",mPosts.get(position).getImage());
+                    i.putExtra("timestamp",mPosts.get(position).getCreatedAt());
+                    i.putExtra("username",mPosts.get(position).getUser().getUsername());
                     context.startActivity(i);
+                }
+            });
+        }
+
+        public void onClickProfilePicture(){
+            ivProfilePicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Intent i = new Intent(context, ProfileFragment.class);
+                    //context.startActivity(i);
+                }
+            });
+
+        }
+        public void onClickHeart(){
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+
                 }
             });
         }

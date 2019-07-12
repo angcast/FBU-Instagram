@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="DM"
-        android:onClick="onClickDM"
-        app:showAsAction="always"
-        />
+        android:icon="@drawable/logout_icon"
+        android:title="Logout"
+        android:onClick="onClickLogout"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
 
 </menu>

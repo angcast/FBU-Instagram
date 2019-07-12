@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -45,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
         final String username = usernameInput.getText().toString();
         final String password = passwordInput.getText().toString();
         login(username, password);
-        Toast.makeText(this, "onCLick works", Toast.LENGTH_LONG).show();
     }
 
     public void onClickSignUp(View view){
@@ -63,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
                 // no errors
                 if (e==null){
                     Log.d("LoginActivity","Login successful!");
-                    Toast.makeText(LoginActivity.this, "successsss", Toast.LENGTH_LONG).show();
                     final Intent i = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(i);
                     // takes you out of the application
@@ -71,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else{
                     Log.d("LoginActivity","Login failure!");
-                    Toast.makeText(LoginActivity.this, "failure", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
             }

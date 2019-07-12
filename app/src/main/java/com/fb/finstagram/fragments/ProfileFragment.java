@@ -18,7 +18,7 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
-public class ProfileFragment extends HomeFragment {
+public class ProfileFragment extends HomeFragment  {
 
  Button uploadNewImage;
 

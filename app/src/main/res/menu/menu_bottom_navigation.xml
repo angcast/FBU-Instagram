@@ -4,17 +4,17 @@
 
     <item
         android:id="@+id/action_home"
-        android:icon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/instagram_home_filled_24"
         android:title="Home"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_compose"
-        android:icon="@android:drawable/btn_star_big_on"
+        android:icon="@drawable/instagram_new_post_outline_24"
         android:title="Compose"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_profile"
-        android:icon="@android:drawable/alert_light_frame"
+        android:icon="@drawable/instagram_user_filled_24"
         android:title="Profile"
         app:showAsAction="always"/>
 </menu>

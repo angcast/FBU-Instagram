@@ -158,8 +158,8 @@ public class ComposeFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 resizingImage();
-                Toast.makeText(getContext(), photoFile.getAbsolutePath(), Toast.LENGTH_LONG).show();/// doesn't show ??
-                ivPicture.setImageBitmap(rotateBitmapOrientation(photoFile.getAbsolutePath()+"_resized"));
+                ivPicture.setImageBitmap(rotateBitmapOrientation(photoFile.getAbsolutePath()));
+                resizingImage();
             } else {
                 // Result was a failure: if you exit out of picture prematurely (TODO ASK: what's diff w/ photoFile == null )
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
@@ -171,7 +171,7 @@ public class ComposeFragment extends Fragment {
         Uri takenPhotoUri = Uri.fromFile(getPhotoFileUri(photoFileName));
         // by this point we have the camera photo on disk
         Bitmap rawTakenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
-        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, 21);
+        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, 300);
         // Configure byte output stream
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         // Compress the image further

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.fb.finstagram.EndlessRecyclerViewScrollListener;
 import com.fb.finstagram.HomeAdapter;
 import com.fb.finstagram.R;
 import com.fb.finstagram.model.Post;
@@ -27,6 +28,7 @@ public class HomeFragment extends Fragment {
     protected ArrayList<Post> arraylist_posts;
     protected HomeAdapter adapter;
     private SwipeRefreshLayout swipeContainer;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     @Nullable
     @Override
@@ -40,11 +42,34 @@ public class HomeFragment extends Fragment {
         arraylist_posts = new ArrayList<>();
         adapter = new HomeAdapter(arraylist_posts);
         rvPosts.setAdapter(adapter);
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        rvPosts.setLayoutManager(linearLayoutManager);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+
+
         setUpSwipeContainer();
 
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvPosts.addOnScrollListener(scrollListener);
+
         showPosts();
+    }
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
     }
 
     public void setUpSwipeContainer(){
@@ -89,4 +114,5 @@ public class HomeFragment extends Fragment {
         });
 
     }
+
 }
