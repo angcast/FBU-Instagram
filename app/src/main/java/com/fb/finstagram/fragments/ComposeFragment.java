@@ -56,6 +56,7 @@ public class ComposeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
         return inflater.inflate(R.layout.activity_compose_fragment, parent, false);
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -66,7 +67,7 @@ public class ComposeFragment extends Fragment {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         onClickSubmit();
         onClickPicture();
-       //TODO why doesn't this work' //setSupportActionBar(toolbar);
+       //TODO why doesn't this work //setSupportActionBar(toolbar);
 
 
     }
@@ -142,7 +143,6 @@ public class ComposeFragment extends Fragment {
         // Use `getExternalFilesDir` on Context to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
-
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
             Log.d(APP_TAG, "failed to create directory");
@@ -161,7 +161,6 @@ public class ComposeFragment extends Fragment {
                 ivPicture.setImageBitmap(rotateBitmapOrientation(photoFile.getAbsolutePath()));
                 resizingImage();
             } else {
-                // Result was a failure: if you exit out of picture prematurely (TODO ASK: what's diff w/ photoFile == null )
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }

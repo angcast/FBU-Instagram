@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SignUpPassword extends AppCompatActivity {
 
-    String newUsername;
+    static String newUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,11 +19,14 @@ public class SignUpPassword extends AppCompatActivity {
         newUsername = getIntent().getStringExtra("newUsername");
     }
 
+    public static String getUsername(){
+        return newUsername;
+    }
+
     public void onClickNext(View view){
         EditText newPassword = (EditText) findViewById(R.id.email);
         Intent i = new Intent(SignUpPassword.this, SignUpEmail.class);
         i.putExtra("newPassword", newPassword.getText().toString());
-        i.putExtra("newUsername", newUsername);
         startActivity(i);
     }
 

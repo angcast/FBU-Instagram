@@ -51,12 +51,9 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                     .load(image.getUrl())
                     .into(holder.ivImagePost);
         }
-       // TextView tvTimeStamp = holder.tvTimeStampPost;
-        //TODO //tvTimeStamp.setText(post.getCreatedAt().toString()); //WHY NOT GET TIME EITHER
-
     }
 
-    public String formatDate (Date date){
+    public static String formatDate (Date date){
         String pattern = "MM/dd/yyyy HH:mm:ss";
         DateFormat df = new SimpleDateFormat(pattern);
         Date today = date;
@@ -64,14 +61,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     }
 
-
-    // Clean all elements of the recycler
     public void clear() {
         mPosts.clear();
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
     public void addAll(List<Post> list) {
         mPosts.addAll(list);
         notifyDataSetChanged();

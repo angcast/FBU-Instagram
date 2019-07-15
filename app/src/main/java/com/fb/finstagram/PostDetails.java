@@ -13,8 +13,6 @@ import com.bumptech.glide.Glide;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PostDetails extends AppCompatActivity {
@@ -45,6 +43,7 @@ public class PostDetails extends AppCompatActivity {
         createdAt = (Date) getIntent().getExtras().get("timestamp");
         username = getIntent().getStringExtra("username");
         toolbar = findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
@@ -54,16 +53,9 @@ public class PostDetails extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_home,menu);
         return true;
     }
+
     public void onClickLogout(MenuItem item){
         ParseUser.logOut();
-
-    }
-
-    public String formatDate (Date date){
-        String pattern = "MM/dd/yyyy HH:mm:ss";
-        DateFormat df = new SimpleDateFormat(pattern);
-        Date today = date;
-        return df.format(today);
 
     }
 
@@ -71,7 +63,7 @@ public class PostDetails extends AppCompatActivity {
         tvDescription.setText(description);
         tvUsername.setText(username);
 
-        tvCreatedAt.setText(formatDate(createdAt));
+        tvCreatedAt.setText(HomeAdapter.formatDate(createdAt));
 
         Glide.with(this)
                 .load(image.getUrl())
